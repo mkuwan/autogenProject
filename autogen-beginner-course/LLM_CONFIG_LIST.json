@@ -1,0 +1,49 @@
+[
+    {
+        "model": "codellama",
+        "base_url": "http://localhost:11434/v1",
+        "api_key": "ollama"
+    },
+    {
+        "model": "codegemma",
+        "base_url": "http://localhost:11434/v1",
+        "api_key": "ollama"
+    },
+    {
+        "model": "llama3.1",
+        "base_url": "http://localhost:11434/v1",
+        "api_key": "ollama"
+    },
+    {
+        "model": "mistral",
+        "base_url": "http://localhost:11434/v1",
+        "api_key": "ollama"
+    },
+    {
+        "model": "llava",
+        "base_url": "http://localhost:11434/v1",
+        "api_key": "ollama"
+    },
+    {
+        "model": "llama3.2",
+        "base_url": "http://localhost:11434/v1",
+        "api_key": "ollama"
+    },
+    {
+        "model": "llama3.2:1b",
+        "base_url": "http://localhost:11434/v1",
+        "api_key": "ollama"
+    },
+
+
+    {
+        "model": "mistral-nemo-instruct-2407",
+        "base_url": "http://localhost:1234/v1",
+        "api_key": "lm-studio"
+    },
+    {
+        "model": "rakutenai-7b-chat",
+        "base_url": "http://localhost:1234/v1",
+        "api_key": "lm-studio"
+    }
+]

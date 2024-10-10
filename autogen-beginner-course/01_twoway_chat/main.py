@@ -2,19 +2,19 @@ import autogen
 
 def main():
     config_list = autogen.config_list_from_json(
-        env_or_file="../OLLAMA_CONFIG_LIST.json",
+        env_or_file="../LLM_CONFIG_LIST.json",
     )
 
     filter_codellama = {"model": ["codellama"]}
     filter_codegemma = {"model": ["codegemma"]}
     filter_llama31 = {"model": ["llama3.1"]}
     filter_mistral = {"model": ["mistral"]}
-
+    filter_mistral_nemo = {"model": ["mistral-nemo-instruct-2407"]}
 
     assistant = autogen.AssistantAgent(
         name="assistant",
         llm_config={
-            "config_list": autogen.filter_config(config_list, filter_codegemma),
+            "config_list": autogen.filter_config(config_list, filter_mistral_nemo),
             "temperature": 0,
             "price": [0, 0],
         },

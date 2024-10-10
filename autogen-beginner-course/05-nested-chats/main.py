@@ -1,7 +1,7 @@
 import autogen
 
 config_list = autogen.config_list_from_json(
-    env_or_file="../OLLAMA_CONFIG_LIST.json",
+    env_or_file="../LLM_CONFIG_LIST.json",
 )
 
 filter_codellama = {"model": ["codellama"]}
@@ -42,7 +42,7 @@ user_proxy = autogen.UserProxyAgent(
 
 critic = autogen.AssistantAgent(
     name="Critic",
-    llm_config={"config_list": config_list},
+    llm_config=llm_config,
     system_message="""
     You are a critic, known for your thoroughness and commitment to standards.
     Your task is to scrutinize content for any harmful elements or regulatory violations, ensuring

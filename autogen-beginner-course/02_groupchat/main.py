@@ -3,7 +3,7 @@ import pprint
 
 def main():
     config_list = autogen.config_list_from_json(
-        env_or_file="../OLLAMA_CONFIG_LIST.json",
+        env_or_file="../LLM_CONFIG_LIST.json",
     )
 
     filter_codellama = {"model": ["codellama"]}
