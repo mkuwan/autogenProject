@@ -24,13 +24,47 @@ llm_config = {
 writer = autogen.AssistantAgent(
     name="Writer",
     llm_config=llm_config,
+    max_consecutive_auto_reply=2,
     system_message="""
-    あなたは、アプリケーション改廃における設計の専門家です。
-    クライアントからの要望をまとめて、要件定義を作成したり、基本設計、詳細設計を作成することができます。
-    求められたドキュメントはMarkdown形式で記述してください。
-    フロー図が含まれる場合は、Mermaid形式で記述してください。
+    あなたは、アプリケーション開発における設計の専門家です。
+    クライアントからの要望や要求定義から、要件定義書を作成してください。
+    作成する成果物としては基本的な要件定義の項目の他に以下のものを考慮して必要に応じて追加してください。
+    ただしユーザーから指定があった場合はそれに合わせてください。
+    - 機能用件
+    - ユースケース図
+    - 業務フロー図
+    - システム設計書
+    - アーキテクチャ図
+    - 非機能要件
+    ドキュメントはMarkdown形式で記述してください。
+    フロー図が含む場合はMermaid形式で記述してください。
     """,
 )
+
+
+Reviewer = autogen.AssistantAgent(
+    name="Reviewer",
+    llm_config=llm_config,
+    # max_consecutive_auto_reply=1,
+    system_message="""
+    あなたは、設計の品質を向上させるためのフィードバックを提供するレビュアーです。
+    設計者(Writer)が提出した内容が要件に適合しているか、品質が高いかを確認することが求められます。
+    ユーザーやクライアントから提出された内容に要件が適合しているか、品質が高いかを確認し、設計者(Writer)にフィードバックを提供してください。
+    また文章の体裁、誤字脱字、表現の統一にも注意してフィードバックを提供してください。
+    特に、以下の点についてレビューを行ってください。
+    - 内容の明確性, 説明の適切さ
+    - 要件の過不足の確認, 不足している場合は追加要件の提案
+    - ドキュメントの体裁, 誤字脱字の確認
+    - フロー図の正確性, 説明の明確さ
+    - ドキュメントの一貫性, 表現の統一
+    - その他の改善点
+    """,
+)
+
+
+def reflection_message(recipient, messages, sender, config):
+    print("Reflecting...")
+    return f"次のドキュメントについてレビューとフィードバックを行ってください. \n\n {recipient.chat_messages_for_summary(sender)[-1]['content']}"
 
 user_proxy = autogen.UserProxyAgent(
     name="User",
@@ -44,38 +78,12 @@ user_proxy = autogen.UserProxyAgent(
     # }
 )
 
-Reviewer = autogen.AssistantAgent(
-    name="Reviewer",
-    llm_config=llm_config,
-    system_message="""
-    あなたは、設計の品質を向上させるためのフィードバックを提供するレビュアーです。
-    設計者(Writer)が提出した内容が要件に適合しているか、品質が高いかを確認することが求められます。
-    ユーザーやクライアントから提出された内容に要件が適合しているか、品質が高いかを確認し、設計者(Writer)にフィードバックを提供してください。
-    また文章の体裁、誤字脱字、表現の統一にも注意してフィードバックを提供してください。
-    特に、以下の点についてレビューを行ってください。
-    - 内容の明確性, 説明の適切さ
-    - 要件の過不足の確認, 不足している場合は追加要件の提案
-    - ドキュメントの体裁, 誤字脱字の確認
-    - フロー図の正確性, 説明の明確さ
-    - ドキュメントの一貫性, 表現の統一
-    - その他の改善点
-    以上の点を指摘し、改善点を設計者(Writer)に提供してください。
-    またすでに記載されている内容を繰り返し指摘することはしないでください。
-    """,
-)
-
-
-def reflection_message(recipient, messages, sender, config):
-    print("Reflecting...")
-    return f"次の文章についてレビューとフィードバックを行ってください. \n\n {recipient.chat_messages_for_summary(sender)[-1]['content']}"
-
-
 user_proxy.register_nested_chats(
     [
         {
             "recipient": Reviewer,
             "message": reflection_message,
-            "summary_method": "last_msg",
+            # "summary_method": "last_msg",
             "max_turns": 2,
 
          }
