@@ -1,0 +1,158 @@
+{
+  "requirements": [
+    {
+      "title": "プロジェクト概要",
+      "title_index": "01",
+      "items": [
+        {"subject": "目的", "subject_index": "01"},
+        {"subject": "範囲", "subject_index": "02"},
+        {"subject": "前提条件", "subject_index": "03"},
+        {"subject": "アプローチ", "subject_index": "04"},
+        {"subject": "スコープ", "subject_index": "05"},
+        {"subject": "成果物", "subject_index": "06"},
+        {"subject": "リスク", "subject_index": "07"},
+        {"subject": "課題", "subject_index": "08"},
+        {"subject": "システム構成図", "subject_index": "09"}
+      ]
+    },
+    {
+      "title": "機能要件",
+      "title_index": "02",
+      "items": [
+        {"subject": "システム機能の一覧", "subject_index": "01"},
+        {"subject": "ユースケース", "subject_index": "02"},
+        {"subject": "画面・ユーザーインターフェース", "subject_index": "03"},
+        {"subject": "帳票", "subject_index": "04"},
+        {"subject": "情報・データ", "subject_index": "05"},
+        {"subject": "外部インターフェース", "subject_index": "06"},
+        {"subject": "制約事項", "subject_index": "07"}
+      ]
+    },
+    {
+      "title": "データ要件",
+      "title_index": "03",
+      "items": [
+        {"subject": "データベース要件一覧", "subject_index": "01"},
+        {"subject": "データモデル", "subject_index": "02"},
+        {"subject": "データフロー", "subject_index": "03"},
+        {"subject": "データの保存", "subject_index": "04"},
+        {"subject": "データの保護", "subject_index": "05"},
+        {"subject": "データの品質", "subject_index": "06"},
+        {"subject": "データセキュリティ", "subject_index": "07"}
+      ]
+    },
+    {
+      "title": "非機能要件",
+      "title_index": "04",
+      "items": [
+        {"subject": "性能", "subject_index": "01"},
+        {"subject": "信頼性", "subject_index": "02"},
+        {"subject": "セキュリティ", "subject_index": "03"},
+        {"subject": "保守性", "subject_index": "04"},
+        {"subject": "運用性", "subject_index": "05"},
+        {"subject": "拡張性", "subject_index": "06"},
+        {"subject": "移行性", "subject_index": "07"},
+        {"subject": "可用性", "subject_index": "08"},
+        {"subject": "システムの冗長性・耐障害性", "subject_index": "09"}
+      ]
+    },
+    {
+      "title": "制約条件",
+      "title_index": "05",
+      "items": [
+        {"subject": "予算", "subject_index": "01"},
+        {"subject": "スケジュール", "subject_index": "02"},
+        {"subject": "リソース", "subject_index": "03"},
+        {"subject": "技術", "subject_index": "04"},
+        {"subject": "法規制", "subject_index": "05"}
+      ]
+    },
+    {
+      "title": "リスク管理",
+      "title_index": "06",
+      "items": [
+        {"subject": "リスク一覧", "subject_index": "01"},
+        {"subject": "リスクの定義", "subject_index": "02"},
+        {"subject": "リスクの評価", "subject_index": "03"},
+        {"subject": "リスクの対応", "subject_index": "04"},
+        {"subject": "リスクの監視", "subject_index": "05"},
+        {"subject": "リスクの報告", "subject_index": "06"}
+      ]
+    },
+    {
+      "title": "テスト計画",
+      "title_index": "07",
+      "items": [
+        {"subject": "テストの範囲", "subject_index": "01"},
+        {"subject": "テストの種類", "subject_index": "02"},
+        {"subject": "テストの項目", "subject_index": "03"},
+        {"subject": "テストの方法", "subject_index": "04"},
+        {"subject": "テストのスケジュール", "subject_index": "05"},
+        {"subject": "テストの報告", "subject_index": "06"}
+      ]
+    },
+    {
+      "title": "承認と変更管理",
+      "title_index": "08",
+      "items": [
+        {"subject": "承認プロセス", "subject_index": "01"},
+        {"subject": "変更管理プロセス", "subject_index": "02"},
+        {"subject": "変更履歴", "subject_index": "03"}
+      ]
+    },
+    {
+      "title": "プロジェクト計画",
+      "title_index": "09",
+      "items": [
+        {"subject": "WBS", "subject_index": "01"}
+      ]
+    },
+    {
+      "title": "運用と保守",
+      "title_index": "10",
+      "items": [
+        {"subject": "運用計画", "subject_index": "01"},
+        {"subject": "保守計画", "subject_index": "02"},
+        {"subject": "サポート体制", "subject_index": "03"}
+      ]
+    },
+    {
+      "title": "トレーニング",
+      "title_index": "11",
+      "items": [
+        {"subject": "トレーニング計画", "subject_index": "01"},
+        {"subject": "トレーニング内容", "subject_index": "02"},
+        {"subject": "トレーニング方法", "subject_index": "03"}
+      ]
+    },
+    {
+      "title": "ドキュメント",
+      "title_index": "12",
+      "items": [
+        {"subject": "ドキュメント一覧", "subject_index": "01"},
+        {"subject": "ドキュメントの作成", "subject_index": "02"},
+        {"subject": "ドキュメントの管理", "subject_index": "03"}
+      ]
+    },
+    {
+      "title": "移行計画",
+      "title_index": "13",
+      "items": [
+        {"subject": "移行計画", "subject_index": "01"},
+        {"subject": "移行手順", "subject_index": "02"},
+        {"subject": "移行リスク", "subject_index": "03"},
+        {"subject": "移行スケジュール", "subject_index": "04"}
+      ]
+    },
+    {
+      "title": "引継ぎ計画",
+      "title_index": "14",
+      "items": [
+        {"subject": "引継ぎ計画", "subject_index": "01"},
+        {"subject": "引継ぎ手順", "subject_index": "02"},
+        {"subject": "引継ぎリスク", "subject_index": "03"},
+        {"subject": "引継ぎスケジュール", "subject_index": "04"}
+      ]
+    }
+  ]
+}
