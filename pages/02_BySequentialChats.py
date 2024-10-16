@@ -632,7 +632,7 @@ if start_text:
                         "clear_history": True,
                         "silent": False,
                         "max_turns": 1,
-                        "summary_method": "reflection_with_llm"
+                        "summary_method": "last_msg"
                     },
                     {
                         "chat_id": 1,
@@ -641,7 +641,7 @@ if start_text:
                         "clear_history": False,
                         "silent": False,
                         "max_turns": 1,
-                        "summary_method": "reflection_with_llm"
+                        "summary_method": "last_msg"
                     },
                     {
                         "chat_id": 2,
@@ -650,7 +650,7 @@ if start_text:
                         "clear_history": False,
                         "silent": False,
                         "max_turns": 1,
-                        "summary_method": "reflection_with_llm"
+                        "summary_method": "last_msg"
                     },
                     # {
                     #     "chat_id": 3,

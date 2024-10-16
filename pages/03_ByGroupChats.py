@@ -36,10 +36,6 @@ if "messages" not in st.session_state:
     st.session_state["messages"] = []
 
 
-# チャットメッセージを表示
-for msg in st.session_state.messages:
-    st.chat_message(msg["role"]).write(msg["content"])
-
 
 class TrackableAssistantAgent(AssistantAgent):
     """
@@ -58,10 +54,43 @@ class TrackableUserProxyAgent(UserProxyAgent):
     AssistantAgentからの回答を表示できるため、こちらを使用することをお勧めします。
     """
     def _process_received_message(self, message, sender, silent):
-        with st.chat_message(sender.name):
-            st.markdown(message)
+        # st.chat_message(sender.name).write(message)
+        # with st.chat_message(sender.name):
+        #     st.markdown(message)
         st.session_state.messages.append({"role": sender.name, "content": message})
         return super()._process_received_message(message, sender, silent)
+
+
+
+def print_messages(recipient, messages, sender, config):
+    print(f"Messages from: {sender.name} sent to: {recipient.name} | num messages: {len(messages)} | message: {messages[-1]}")
+
+    msg = messages[-1]['content']
+
+    with st.chat_message(sender.name):
+        st.markdown(msg)
+
+    return False, None #conversation continued
+
+
+def create_message(title, subjects: [], appendix, check_messages: dict):
+    """
+    チェックメッセージを作成します
+    :param title:
+    :param subjects:
+    :param appendix:
+    :param check_messages:
+    :return:
+    """
+    if title not in check_messages:
+        check_messages[title] = {
+            "subjects": subjects,
+            "appendix": appendix
+        }
+    # もしタイトルがすでに辞書に存在していたら、そのタイトルのsubjectリスト、補足に変更する
+    else:
+        check_messages[title]["subjects"] = subjects
+        check_messages[title]["appendix"] = appendix
 
 
 # 要件定義書の作成項目をJSONファイルから読み込んで表示させます
@@ -72,13 +101,14 @@ class TrackableUserProxyAgent(UserProxyAgent):
 with st.container():
     st.markdown('### 要件定義作成')
     # requirement_document_itemsからtitleとitemsを取得
-    summary = st.text_area("要件定義概要")
+    overview = st.text_area("要件定義概要")
     for item in requirement_document_items:
         title = item.get('title')
         st.markdown(f"**{title}**")
 
         title_index = item.get('title_index')
         if title_index == "01":
+            title01 = title
             col0101, col0102, col0103 = st.columns(3)
             col0104, col0105, col0106 = st.columns(3)
             col0107, col0108, col0109 = st.columns(3)
@@ -130,6 +160,7 @@ with st.container():
             appendix01 = st.text_area(f"{item.get('title')}補足")
 
         elif title_index == "02":
+            title02 = title
             col0201, col0202, col0203 = st.columns(3)
             col0204, col0205, col0206 = st.columns(3)
             col0207, col0208, col0209 = st.columns(3)
@@ -181,6 +212,7 @@ with st.container():
             appendix02 = st.text_area(f"{item.get('title')}補足")
 
         elif title_index == "03":
+            title03 = title
             col0301, col0302, col0303 = st.columns(3)
             col0304, col0305, col0306 = st.columns(3)
             col0307, col0308, col0309 = st.columns(3)
@@ -232,6 +264,7 @@ with st.container():
             appendix03 = st.text_area(f"{item.get('title')}補足")
 
         elif title_index == "04":
+            title04 = title
             col0401, col0402, col0403 = st.columns(3)
             col0404, col0405, col0406 = st.columns(3)
             col0407, col0408, col0409 = st.columns(3)
@@ -283,6 +316,7 @@ with st.container():
             appendix04 = st.text_area(f"{item.get('title')}補足")
 
         elif title_index == "05":
+            title05 = title
             col0501, col0502, col0503 = st.columns(3)
             col0504, col0505, col0506 = st.columns(3)
             col0507, col0508, col0509 = st.columns(3)
@@ -334,6 +368,7 @@ with st.container():
             appendix05 = st.text_area(f"{item.get('title')}補足")
 
         elif title_index == "06":
+            title06 = title
             col0601, col0602, col0603 = st.columns(3)
             col0604, col0605, col0606 = st.columns(3)
             col0607, col0608, col0609 = st.columns(3)
@@ -385,6 +420,7 @@ with st.container():
             appendix06 = st.text_area(f"{item.get('title')}補足")
 
         elif title_index == "07":
+            title07 = title
             col0701, col0702, col0703 = st.columns(3)
             col0704, col0705, col0706 = st.columns(3)
             col0707, col0708, col0709 = st.columns(3)
@@ -436,6 +472,7 @@ with st.container():
             appendix07 = st.text_area(f"{item.get('title')}補足")
 
         elif title_index == "08":
+            title08 = title
             col0801, col0802, col0803 = st.columns(3)
             col0804, col0805, col0806 = st.columns(3)
             col0807, col0808, col0809 = st.columns(3)
@@ -487,6 +524,7 @@ with st.container():
             appendix08 = st.text_area(f"{item.get('title')}補足")
 
         elif title_index == "09":
+            title09 = title
             col0901, col0902, col0903 = st.columns(3)
             col0904, col0905, col0906 = st.columns(3)
             col0907, col0908, col0909 = st.columns(3)
@@ -538,6 +576,7 @@ with st.container():
             appendix09 = st.text_area(f"{item.get('title')}補足")
 
         elif title_index == "10":
+            title10 = title
             col1001, col1002, col1003 = st.columns(3)
             col1004, col1005, col1006 = st.columns(3)
             col1007, col1008, col1009 = st.columns(3)
@@ -589,6 +628,7 @@ with st.container():
             appendix10 = st.text_area(f"{item.get('title')}補足")
 
         elif title_index == "11":
+            title11 = title
             col1101, col1102, col1103 = st.columns(3)
             col1104, col1105, col1106 = st.columns(3)
             col1107, col1108, col1109 = st.columns(3)
@@ -640,6 +680,7 @@ with st.container():
             appendix11 = st.text_area(f"{item.get('title')}補足")
 
         elif title_index == "12":
+            title12 = title
             col1201, col1202, col1203 = st.columns(3)
             col1204, col1205, col1206 = st.columns(3)
             col1207, col1208, col1209 = st.columns(3)
@@ -691,6 +732,7 @@ with st.container():
             appendix12 = st.text_area(f"{item.get('title')}補足")
 
         elif title_index == "13":
+            title13 = title
             col1301, col1302, col1303 = st.columns(3)
             col1304, col1305, col1306 = st.columns(3)
             col1307, col1308, col1309 = st.columns(3)
@@ -742,6 +784,7 @@ with st.container():
             appendix13 = st.text_area(f"{item.get('title')}補足")
 
         elif title_index == "14":
+            title14 = title
             col1401, col1402, col1403 = st.columns(3)
             col1404, col1405, col1406 = st.columns(3)
             col1407, col1408, col1409 = st.columns(3)
@@ -795,305 +838,650 @@ with st.container():
     appendix_other = st.text_area("**その他**")
 
 
-
-
-    if check0101 and subject0101:
-        st.write(f"col0101: {subject0101}")
-    if check0102 and subject0102:
-        st.write(f"col0102: {subject0102}")
-    if check0103 and subject0103:
-        st.write(f"col0103: {subject0103}")
-    if check0104 and subject0104:
-        st.write(f"col0104: {subject0104}")
-    if check0105 and subject0105:
-        st.write(f"col0105: {subject0105}")
-    if check0106 and subject0106:
-        st.write(f"col0106: {subject0106}")
-    if check0107 and subject0107:
-        st.write(f"col0107: {subject0107}")
-    if check0108 and subject0108:
-        st.write(f"col0108: {subject0108}")
-    if check0109 and subject0109:
-        st.write(f"col0109: {subject0109}")
+# """項目入力"""
+check_messages = {}
+if overview:
+    check_messages = {}
+    temp_title = ""
+    temp_subjects = []
+    temp_appendix = ""
+    if check0101:
+        temp_title = title01
+        temp_subjects.append(subject0101)
+    if check0102:
+        temp_title = title01
+        temp_subjects.append(subject0102)
+    if check0103:
+        temp_title = title01
+        temp_subjects.append(subject0103)
+    if check0104:
+        temp_title = title01
+        temp_subjects.append(subject0104)
+    if check0105:
+        temp_title = title01
+        temp_subjects.append(subject0105)
+    if check0106:
+        temp_title = title01
+        temp_subjects.append(subject0106)
+    if check0107:
+        temp_title = title01
+        temp_subjects.append(subject0107)
+    if check0108:
+        temp_title = title01
+        temp_subjects.append(subject0108)
+    if check0109:
+        temp_title = title01
+        temp_subjects.append(subject0109)
     if appendix01:
-        st.write(f"appendix01: {appendix01}")
+        temp_title = title01
+        temp_appendix = appendix01
+    if temp_title:
+        create_message(temp_title, subjects=temp_subjects, appendix=temp_appendix, check_messages=check_messages)
 
-    if check0201 and subject0201:
-        st.write(f"col0201: {subject0201}")
-    if check0202 and subject0202:
-        st.write(f"col0202: {subject0202}")
-    if check0203 and subject0203:
-        st.write(f"col0203: {subject0203}")
-    if check0204 and subject0204:
-        st.write(f"col0204: {subject0204}")
-    if check0205 and subject0205:
-        st.write(f"col0205: {subject0205}")
-    if check0206 and subject0206:
-        st.write(f"col0206: {subject0206}")
-    if check0207 and subject0207:
-        st.write(f"col0207: {subject0207}")
-    if check0208 and subject0208:
-        st.write(f"col0208: {subject0208}")
-    if check0209 and subject0209:
-        st.write(f"col0209: {subject0209}")
+    temp_title = ""
+    temp_subjects = []
+    temp_appendix = ""
+    if check0201:
+        temp_title = title02
+        temp_subjects.append(subject0201)
+    if check0202:
+        temp_title = title02
+        temp_subjects.append(subject0202)
+    if check0203:
+        temp_title = title02
+        temp_subjects.append(subject0203)
+    if check0204:
+        temp_title = title02
+        temp_subjects.append(subject0204)
+    if check0205:
+        temp_title = title02
+        temp_subjects.append(subject0205)
+    if check0206:
+        temp_title = title02
+        temp_subjects.append(subject0206)
+    if check0207:
+        temp_title = title02
+        temp_subjects.append(subject0207)
+    if check0208:
+        temp_title = title02
+        temp_subjects.append(subject0208)
+    if check0209:
+        temp_title = title02
+        temp_subjects.append(subject0209)
     if appendix02:
-        st.write(f"appendix02: {appendix02}")
+        temp_title = title02
+        temp_appendix = appendix02
+    if temp_title:
+        create_message(temp_title, subjects=temp_subjects, appendix=temp_appendix, check_messages=check_messages)
 
-    if check0301 and subject0301:
-        st.write(f"col0301: {subject0301}")
-    if check0302 and subject0302:
-        st.write(f"col0302: {subject0302}")
-    if check0303 and subject0303:
-        st.write(f"col0303: {subject0303}")
-    if check0304 and subject0304:
-        st.write(f"col0304: {subject0304}")
-    if check0305 and subject0305:
-        st.write(f"col0305: {subject0305}")
-    if check0306 and subject0306:
-        st.write(f"col0306: {subject0306}")
-    if check0307 and subject0307:
-        st.write(f"col0307: {subject0307}")
-    if check0308 and subject0308:
-        st.write(f"col0308: {subject0308}")
-    if check0309 and subject0309:
-        st.write(f"col0309: {subject0309}")
+    temp_title = ""
+    temp_subjects = []
+    temp_appendix = ""
+    if check0301:
+        temp_title = title03
+        temp_subjects.append(subject0301)
+    if check0302:
+        temp_title = title03
+        temp_subjects.append(subject0302)
+    if check0303:
+        temp_title = title03
+        temp_subjects.append(subject0303)
+    if check0304:
+        temp_title = title03
+        temp_subjects.append(subject0304)
+    if check0305:
+        temp_title = title03
+        temp_subjects.append(subject0305)
+    if check0306:
+        temp_title = title03
+        temp_subjects.append(subject0306)
+    if check0307:
+        temp_title = title03
+        temp_subjects.append(subject0307)
+    if check0308:
+        temp_title = title03
+        temp_subjects.append(subject0308)
+    if check0309:
+        temp_title = title03
+        temp_subjects.append(subject0309)
     if appendix03:
-        st.write(f"appendix03: {appendix03}")
+        temp_title = title03
+        temp_appendix = appendix03
+    if temp_title:
+        create_message(temp_title, subjects=temp_subjects, appendix=temp_appendix, check_messages=check_messages)
 
-    if check0401 and subject0401:
-        st.write(f"col0401: {subject0401}")
-    if check0402 and subject0402:
-        st.write(f"col0402: {subject0402}")
-    if check0403 and subject0403:
-        st.write(f"col0403: {subject0403}")
-    if check0404 and subject0404:
-        st.write(f"col0404: {subject0404}")
-    if check0405 and subject0405:
-        st.write(f"col0405: {subject0405}")
-    if check0406 and subject0406:
-        st.write(f"col0406: {subject0406}")
-    if check0407 and subject0407:
-        st.write(f"col0407: {subject0407}")
-    if check0408 and subject0408:
-        st.write(f"col0408: {subject0408}")
-    if check0409 and subject0409:
-        st.write(f"col0409: {subject0409}")
+    temp_title = ""
+    temp_subjects = []
+    temp_appendix = ""
+    if check0401:
+        temp_title = title04
+        temp_subjects.append(subject0401)
+    if check0402:
+        temp_title = title04
+        temp_subjects.append(subject0402)
+    if check0403:
+        temp_title = title04
+        temp_subjects.append(subject0403)
+    if check0404:
+        temp_title = title04
+        temp_subjects.append(subject0404)
+    if check0405:
+        temp_title = title04
+        temp_subjects.append(subject0405)
+    if check0406:
+        temp_title = title04
+        temp_subjects.append(subject0406)
+    if check0407:
+        temp_title = title04
+        temp_subjects.append(subject0407)
+    if check0408:
+        temp_title = title04
+        temp_subjects.append(subject0408)
+    if check0409:
+        temp_title = title04
+        temp_subjects.append(subject0409)
     if appendix04:
-        st.write(f"appendix04: {appendix04}")
+        temp_title = title04
+        temp_appendix = appendix04
+    if temp_title:
+        create_message(temp_title, subjects=temp_subjects, appendix=temp_appendix, check_messages=check_messages)
 
-    if check0501 and subject0501:
-        st.write(f"col0501: {subject0501}")
-    if check0502 and subject0502:
-        st.write(f"col0502: {subject0502}")
-    if check0503 and subject0503:
-        st.write(f"col0503: {subject0503}")
-    if check0504 and subject0504:
-        st.write(f"col0504: {subject0504}")
-    if check0505 and subject0505:
-        st.write(f"col0505: {subject0505}")
-    if check0506 and subject0506:
-        st.write(f"col0506: {subject0506}")
-    if check0507 and subject0507:
-        st.write(f"col0507: {subject0507}")
-    if check0508 and subject0508:
-        st.write(f"col0508: {subject0508}")
-    if check0509 and subject0509:
-        st.write(f"col0509: {subject0509}")
+    temp_title = ""
+    temp_subjects = []
+    temp_appendix = ""
+    if check0501:
+        temp_title = title05
+        temp_subjects.append(subject0501)
+    if check0502:
+        temp_title = title05
+        temp_subjects.append(subject0502)
+    if check0503:
+        temp_title = title05
+        temp_subjects.append(subject0503)
+    if check0504:
+        temp_title = title05
+        temp_subjects.append(subject0504)
+    if check0505:
+        temp_title = title05
+        temp_subjects.append(subject0505)
+    if check0506:
+        temp_title = title05
+        temp_subjects.append(subject0506)
+    if check0507:
+        temp_title = title05
+        temp_subjects.append(subject0507)
+    if check0508:
+        temp_title = title05
+        temp_subjects.append(subject0508)
+    if check0509:
+        temp_title = title05
+        temp_subjects.append(subject0509)
     if appendix05:
-        st.write(f"appendix05: {appendix05}")
+        temp_title = title05
+        temp_appendix = appendix05
+    if temp_title:
+        create_message(temp_title, subjects=temp_subjects, appendix=temp_appendix, check_messages=check_messages)
 
-    if check0601 and subject0601:
-        st.write(f"col0601: {subject0601}")
-    if check0602 and subject0602:
-        st.write(f"col0602: {subject0602}")
-    if check0603 and subject0603:
-        st.write(f"col0603: {subject0603}")
-    if check0604 and subject0604:
-        st.write(f"col0604: {subject0604}")
-    if check0605 and subject0605:
-        st.write(f"col0605: {subject0605}")
-    if check0606 and subject0606:
-        st.write(f"col0606: {subject0606}")
-    if check0607 and subject0607:
-        st.write(f"col0607: {subject0607}")
-    if check0608 and subject0608:
-        st.write(f"col0608: {subject0608}")
-    if check0609 and subject0609:
-        st.write(f"col0609: {subject0609}")
+    temp_title = ""
+    temp_subjects = []
+    temp_appendix = ""
+    if check0601:
+        temp_title = title06
+        temp_subjects.append(subject0601)
+    if check0602:
+        temp_title = title06
+        temp_subjects.append(subject0602)
+    if check0603:
+        temp_title = title06
+        temp_subjects.append(subject0603)
+    if check0604:
+        temp_title = title06
+        temp_subjects.append(subject0604)
+    if check0605:
+        temp_title = title06
+        temp_subjects.append(subject0605)
+    if check0606:
+        temp_title = title06
+        temp_subjects.append(subject0606)
+    if check0607:
+        temp_title = title06
+        temp_subjects.append(subject0607)
+    if check0608:
+        temp_title = title06
+        temp_subjects.append(subject0608)
+    if check0609:
+        temp_title = title06
+        temp_subjects.append(subject0609)
     if appendix06:
-        st.write(f"appendix06: {appendix06}")
+        temp_title = title06
+        temp_appendix = appendix06
+    if temp_title:
+        create_message(temp_title, subjects=temp_subjects, appendix=temp_appendix, check_messages=check_messages)
 
-    if check0701 and subject0701:
-        st.write(f"col0701: {subject0701}")
-    if check0702 and subject0702:
-        st.write(f"col0702: {subject0702}")
-    if check0703 and subject0703:
-        st.write(f"col0703: {subject0703}")
-    if check0704 and subject0704:
-        st.write(f"col0704: {subject0704}")
-    if check0705 and subject0705:
-        st.write(f"col0705: {subject0705}")
-    if check0706 and subject0706:
-        st.write(f"col0706: {subject0706}")
-    if check0707 and subject0707:
-        st.write(f"col0707: {subject0707}")
-    if check0708 and subject0708:
-        st.write(f"col0708: {subject0708}")
-    if check0709 and subject0709:
-        st.write(f"col0709: {subject0709}")
+    temp_title = ""
+    temp_subjects = []
+    temp_appendix = ""
+    if check0701:
+        temp_title = title07
+        temp_subjects.append(subject0701)
+    if check0702:
+        temp_title = title07
+        temp_subjects.append(subject0702)
+    if check0703:
+        temp_title = title07
+        temp_subjects.append(subject0703)
+    if check0704:
+        temp_title = title07
+        temp_subjects.append(subject0704)
+    if check0705:
+        temp_title = title07
+        temp_subjects.append(subject0705)
+    if check0706:
+        temp_title = title07
+        temp_subjects.append(subject0706)
+    if check0707:
+        temp_title = title07
+        temp_subjects.append(subject0707)
+    if check0708:
+        temp_title = title07
+        temp_subjects.append(subject0708)
+    if check0709:
+        temp_title = title07
+        temp_subjects.append(subject0709)
     if appendix07:
-        st.write(f"appendix07: {appendix07}")
+        temp_title = title07
+        temp_appendix = appendix07
+    if temp_title:
+        create_message(temp_title, subjects=temp_subjects, appendix=temp_appendix, check_messages=check_messages)
 
-    if check0801 and subject0801:
-        st.write(f"col0801: {subject0801}")
-    if check0802 and subject0802:
-        st.write(f"col0802: {subject0802}")
-    if check0803 and subject0803:
-        st.write(f"col0803: {subject0803}")
-    if check0804 and subject0804:
-        st.write(f"col0804: {subject0804}")
-    if check0805 and subject0805:
-        st.write(f"col0805: {subject0805}")
-    if check0806 and subject0806:
-        st.write(f"col0806: {subject0806}")
-    if check0807 and subject0807:
-        st.write(f"col0807: {subject0807}")
-    if check0808 and subject0808:
-        st.write(f"col0808: {subject0808}")
-    if check0809 and subject0809:
-        st.write(f"col0809: {subject0809}")
+    temp_title = ""
+    temp_subjects = []
+    temp_appendix = ""
+    if check0801:
+        temp_title = title08
+        temp_subjects.append(subject0801)
+    if check0802:
+        temp_title = title08
+        temp_subjects.append(subject0802)
+    if check0803:
+        temp_title = title08
+        temp_subjects.append(subject0803)
+    if check0804:
+        temp_title = title08
+        temp_subjects.append(subject0804)
+    if check0805:
+        temp_title = title08
+        temp_subjects.append(subject0805)
+    if check0806:
+        temp_title = title08
+        temp_subjects.append(subject0806)
+    if check0807:
+        temp_title = title08
+        temp_subjects.append(subject0807)
+    if check0808:
+        temp_title = title08
+        temp_subjects.append(subject0808)
+    if check0809:
+        temp_title = title08
+        temp_subjects.append(subject0809)
     if appendix08:
-        st.write(f"appendix08: {appendix08}")
+        temp_title = title08
+        temp_appendix = appendix08
+    if temp_title:
+        create_message(temp_title, subjects=temp_subjects, appendix=temp_appendix, check_messages=check_messages)
 
-    if check0901 and subject0901:
-        st.write(f"col0901: {subject0901}")
-    if check0902 and subject0902:
-        st.write(f"col0902: {subject0902}")
-    if check0903 and subject0903:
-        st.write(f"col0903: {subject0903}")
-    if check0904 and subject0904:
-        st.write(f"col0904: {subject0904}")
-    if check0905 and subject0905:
-        st.write(f"col0905: {subject0905}")
-    if check0906 and subject0906:
-        st.write(f"col0906: {subject0906}")
-    if check0907 and subject0907:
-        st.write(f"col0907: {subject0907}")
-    if check0908 and subject0908:
-        st.write(f"col0908: {subject0908}")
-    if check0909 and subject0909:
-        st.write(f"col0909: {subject0909}")
+    temp_title = ""
+    temp_subjects = []
+    temp_appendix = ""
+    if check0901:
+        temp_title = title09
+        temp_subjects.append(subject0901)
+    if check0902:
+        temp_title = title09
+        temp_subjects.append(subject0902)
+    if check0903:
+        temp_title = title09
+        temp_subjects.append(subject0903)
+    if check0904:
+        temp_title = title09
+        temp_subjects.append(subject0904)
+    if check0905:
+        temp_title = title09
+        temp_subjects.append(subject0905)
+    if check0906:
+        temp_title = title09
+        temp_subjects.append(subject0906)
+    if check0907:
+        temp_title = title09
+        temp_subjects.append(subject0907)
+    if check0908:
+        temp_title = title09
+        temp_subjects.append(subject0908)
+    if check0909:
+        temp_title = title09
+        temp_subjects.append(subject0909)
     if appendix09:
-        st.write(f"appendix09: {appendix09}")
+        temp_title = title09
+        temp_appendix = appendix09
+    if temp_title:
+        create_message(temp_title, subjects=temp_subjects, appendix=temp_appendix, check_messages=check_messages)
 
-    if check1001 and subject1001:
-        st.write(f"col1001: {subject1001}")
-    if check1002 and subject1002:
-        st.write(f"col1002: {subject1002}")
-    if check1003 and subject1003:
-        st.write(f"col1003: {subject1003}")
-    if check1004 and subject1004:
-        st.write(f"col1004: {subject1004}")
-    if check1005 and subject1005:
-        st.write(f"col1005: {subject1005}")
-    if check1006 and subject1006:
-        st.write(f"col1006: {subject1006}")
-    if check1007 and subject1007:
-        st.write(f"col1007: {subject1007}")
-    if check1008 and subject1008:
-        st.write(f"col1008: {subject1008}")
-    if check1009 and subject1009:
-        st.write(f"col1009: {subject1009}")
+    temp_title = ""
+    temp_subjects = []
+    temp_appendix = ""
+    if check1001:
+        temp_title = title10
+        temp_subjects.append(subject1001)
+    if check1002:
+        temp_title = title10
+        temp_subjects.append(subject1002)
+    if check1003:
+        temp_title = title10
+        temp_subjects.append(subject1003)
+    if check1004:
+        temp_title = title10
+        temp_subjects.append(subject1004)
+    if check1005:
+        temp_title = title10
+        temp_subjects.append(subject1005)
+    if check1006:
+        temp_title = title10
+        temp_subjects.append(subject1006)
+    if check1007:
+        temp_title = title10
+        temp_subjects.append(subject1007)
+    if check1008:
+        temp_title = title10
+        temp_subjects.append(subject1008)
+    if check1009:
+        temp_title = title10
+        temp_subjects.append(subject1009)
     if appendix10:
-        st.write(f"appendix10: {appendix10}")
+        temp_title = title10
+        temp_appendix = appendix10
+    if temp_title:
+        create_message(temp_title, subjects=temp_subjects, appendix=temp_appendix, check_messages=check_messages)
 
-    if check1101 and subject1101:
-        st.write(f"col1101: {subject1101}")
-    if check1102 and subject1102:
-        st.write(f"col1102: {subject1102}")
-    if check1103 and subject1103:
-        st.write(f"col1103: {subject1103}")
-    if check1104 and subject1104:
-        st.write(f"col1104: {subject1104}")
-    if check1105 and subject1105:
-        st.write(f"col1105: {subject1105}")
-    if check1106 and subject1106:
-        st.write(f"col1106: {subject1106}")
-    if check1107 and subject1107:
-        st.write(f"col1107: {subject1107}")
-    if check1108 and subject1108:
-        st.write(f"col1108: {subject1108}")
-    if check1109 and subject1109:
-        st.write(f"col1109: {subject1109}")
+    temp_title = ""
+    temp_subjects = []
+    temp_appendix = ""
+    if check1101:
+        temp_title = title11
+        temp_subjects.append(subject1101)
+    if check1102:
+        temp_title = title11
+        temp_subjects.append(subject1102)
+    if check1103:
+        temp_title = title11
+        temp_subjects.append(subject1103)
+    if check1104:
+        temp_title = title11
+        temp_subjects.append(subject1104)
+    if check1105:
+        temp_title = title11
+        temp_subjects.append(subject1105)
+    if check1106:
+        temp_title = title11
+        temp_subjects.append(subject1106)
+    if check1107:
+        temp_title = title11
+        temp_subjects.append(subject1107)
+    if check1108:
+        temp_title = title11
+        temp_subjects.append(subject1108)
+    if check1109:
+        temp_title = title11
+        temp_subjects.append(subject1109)
     if appendix11:
-        st.write(f"appendix11: {appendix11}")
+        temp_title = title11
+        temp_appendix = appendix11
+    if temp_title:
+        create_message(temp_title, subjects=temp_subjects, appendix=temp_appendix, check_messages=check_messages)
 
-    if check1201 and subject1201:
-        st.write(f"col1201: {subject1201}")
-    if check1202 and subject1202:
-        st.write(f"col1202: {subject1202}")
-    if check1203 and subject1203:
-        st.write(f"col1203: {subject1203}")
-    if check1204 and subject1204:
-        st.write(f"col1204: {subject1204}")
-    if check1205 and subject1205:
-        st.write(f"col1205: {subject1205}")
-    if check1206 and subject1206:
-        st.write(f"col1206: {subject1206}")
-    if check1207 and subject1207:
-        st.write(f"col1207: {subject1207}")
-    if check1208 and subject1208:
-        st.write(f"col1208: {subject1208}")
-    if check1209 and subject1209:
-        st.write(f"col1209: {subject1209}")
+    temp_title = ""
+    temp_subjects = []
+    temp_appendix = ""
+    if check1201:
+        temp_title = title12
+        temp_subjects.append(subject1201)
+    if check1202:
+        temp_title = title12
+        temp_subjects.append(subject1202)
+    if check1203:
+        temp_title = title12
+        temp_subjects.append(subject1203)
+    if check1204:
+        temp_title = title12
+        temp_subjects.append(subject1204)
+    if check1205:
+        temp_title = title12
+        temp_subjects.append(subject1205)
+    if check1206:
+        temp_title = title12
+        temp_subjects.append(subject1206)
+    if check1207:
+        temp_title = title12
+        temp_subjects.append(subject1207)
+    if check1208:
+        temp_title = title12
+        temp_subjects.append(subject1208)
+    if check1209:
+        temp_title = title12
+        temp_subjects.append(subject1209)
     if appendix12:
-        st.write(f"appendix12: {appendix12}")
+        temp_title = title12
+        temp_appendix = appendix12
+    if temp_title:
+        create_message(temp_title, subjects=temp_subjects, appendix=temp_appendix, check_messages=check_messages)
 
-    if check1301 and subject1301:
-        st.write(f"col1301: {subject1301}")
-    if check1302 and subject1302:
-        st.write(f"col1302: {subject1302}")
-    if check1303 and subject1303:
-        st.write(f"col1303: {subject1303}")
-    if check1304 and subject1304:
-        st.write(f"col1304: {subject1304}")
-    if check1305 and subject1305:
-        st.write(f"col1305: {subject1305}")
-    if check1306 and subject1306:
-        st.write(f"col1306: {subject1306}")
-    if check1307 and subject1307:
-        st.write(f"col1307: {subject1307}")
-    if check1308 and subject1308:
-        st.write(f"col1308: {subject1308}")
-    if check1309 and subject1309:
-        st.write(f"col1309: {subject1309}")
+    temp_title = ""
+    temp_subjects = []
+    temp_appendix = ""
+    if check1301:
+        temp_title = title13
+        temp_subjects.append(subject1301)
+    if check1302:
+        temp_title = title13
+        temp_subjects.append(subject1302)
+    if check1303:
+        temp_title = title13
+        temp_subjects.append(subject1303)
+    if check1304:
+        temp_title = title13
+        temp_subjects.append(subject1304)
+    if check1305:
+        temp_title = title13
+        temp_subjects.append(subject1305)
+    if check1306:
+        temp_title = title13
+        temp_subjects.append(subject1306)
+    if check1307:
+        temp_title = title13
+        temp_subjects.append(subject1307)
+    if check1308:
+        temp_title = title13
+        temp_subjects.append(subject1308)
+    if check1309:
+        temp_title = title13
+        temp_subjects.append(subject1309)
     if appendix13:
-        st.write(f"appendix13: {appendix13}")
+        temp_title = title13
+        temp_appendix = appendix13
+    if temp_title:
+        create_message(temp_title, subjects=temp_subjects, appendix=temp_appendix, check_messages=check_messages)
 
-    if check1401 and subject1401:
-        st.write(f"col1401: {subject1401}")
-    if check1402 and subject1402:
-        st.write(f"col1402: {subject1402}")
-    if check1403 and subject1403:
-        st.write(f"col1403: {subject1403}")
-    if check1404 and subject1404:
-        st.write(f"col1404: {subject1404}")
-    if check1405 and subject1405:
-        st.write(f"col1405: {subject1405}")
-    if check1406 and subject1406:
-        st.write(f"col1406: {subject1406}")
-    if check1407 and subject1407:
-        st.write(f"col1407: {subject1407}")
-    if check1408 and subject1408:
-        st.write(f"col1408: {subject1408}")
-    if check1409 and subject1409:
-        st.write(f"col1409: {subject1409}")
+    temp_title = ""
+    temp_subjects = []
+    temp_appendix = ""
+    if check1401:
+        temp_title = title14
+        temp_subjects.append(subject1401)
+    if check1402:
+        temp_title = title14
+        temp_subjects.append(subject1402)
+    if check1403:
+        temp_title = title14
+        temp_subjects.append(subject1403)
+    if check1404:
+        temp_title = title14
+        temp_subjects.append(subject1404)
+    if check1405:
+        temp_title = title14
+        temp_subjects.append(subject1405)
+    if check1406:
+        temp_title = title14
+        temp_subjects.append(subject1406)
+    if check1407:
+        temp_title = title14
+        temp_subjects.append(subject1407)
+    if check1408:
+        temp_title = title14
+        temp_subjects.append(subject1408)
+    if check1409:
+        temp_title = title14
+        temp_subjects.append(subject1409)
     if appendix14:
-        st.write(f"appendix14: {appendix14}")
+        temp_title = title14
+        temp_appendix = appendix14
+    if temp_title:
+        create_message(temp_title, subjects=temp_subjects, appendix=temp_appendix, check_messages=check_messages)
 
     if appendix_other:
-        st.write(f"appendix_other: {appendix_other}")
+        create_message("その他",subjects=[], appendix=appendix_other, check_messages=check_messages)
+
+    # チャット開始
+    if st.button("作成"):
+        st.session_state.messages = []
+
+        def create_writer_task(requirement_documents_summary, title, subjects, appendix):
+            return f"""
+        Role:
+        - あなたは、アプリケーション開発における設計の専門家です。
+        Task:
+        - [要件定義書概要]に関する要件定義書のうち、指定された[タイトル]と[項目]、[追記]に関する部分を作成してください。
+        - 要件定義書を作成するにあたって不足している情報がある場合は、ユーザーに対し質問を行ってください。
+        - 日本語で回答してください。
+        Format:
+        - 要件定義書はMarkdown形式で記述してください。
+        - 図・フローチャート・テーブル等を記載する場合は、MarkdownもしくはMermaid形式で記述してください。
+        - 最大で5000文字までとします。
+        制限:
+        - 指定された[要件定義書概要]、[タイトル]、[項目]、[追記]に関係ない事項を絶対に作成しないでください。
+        - ウェブサイト等のリンクを利用しないでください。
+        - 画像を利用しないでください。
+        - レビュアーからの文言は含めず、要件定義書のみを作成してください。
+        作成項目:
+        - [要件定義書概要]: {requirement_documents_summary}
+        - [タイトル]: {title}
+        - [項目]: {subjects}
+        - [追記]: {appendix}
+        """
 
 
+        def create_reviewer_task(requirement_documents_summary, title, subjects, appendix):
+            return f"""
+        Role:
+        - あなたは、アプリケーション開発における設計の専門家です。
+        Task:
+        - 設計者が作成した要件定義書をレビューしてください。 
+        - 要件定義書に不備がある場合は、指摘を行ってください。
+        - 要件定義書作成項目に対するレビューを行い、それ以外に関してはレビューを行わないでください。
+        - レビュー対象は[要件定義書概要]に関する要件定義書のうち指定された[タイトル]と[項目]、[追記]に関する部分のみです。
+        - 日本語で回答してください。
+        要件定義書作成項目:
+        - [要件定義書概要]: {requirement_documents_summary}
+        - [タイトル]: {title}
+        - [項目]: {subjects}
+        - [追記]: {appendix}
+        要件定義書作成ルール:
+        - Format
+          - 要件定義書はMarkdown形式で記述してください。
+          - 図・フローチャート・テーブル等を記載する場合は、MarkdownもしくはMermaid形式で記述してください。
+          - 最大で5000文字までとします。
+        - 制限
+          - 指定された[タイトル]と[項目]、[追記]に関係ない事項を絶対に作成しないでください。
+          - ウェブサイト等のリンクを利用しないでください。
+          - 画像を利用しないでください。
+        レビュー観点:
+        - 要件定義書が指示内容に従っているか
+        - 要件定義書が正確かつ明確に記述されているか
+        - 要件定義書が適切な情報を提供しているか
+        - 要件定義書が適切なフォーマットで記述されているか
+        - 要件定義書作成ルールに違反していないか
+        - 誤字脱字がないか
+        - 表現や文体は統一感があるか
+        - その他、必要に応じて指摘してください。
+        """
 
+        for title in check_messages.keys():
+            writer = TrackableAssistantAgent(
+                name="Writer",
+                llm_config=llm_config,
+                max_consecutive_auto_reply=2,
+                system_message="あなたは、アプリケーション開発における設計の専門家です。日本語で会話をしてください。"
+            )
+            # writer.register_reply(
+            #     trigger=[autogen.Agent, None],
+            #     reply_func=print_messages,
+            #     config={"callback": None}
+            # )
 
+            reviewer = TrackableAssistantAgent(
+                name="Reviewer",
+                llm_config=llm_config,
+                max_consecutive_auto_reply=2,
+                system_message="あなたは、アプリケーション開発における設計の専門家です。日本語で会話をしてください。",
+            )
+            # reviewer.register_reply(
+            #     trigger=[autogen.Agent, None],
+            #     reply_func=print_messages,
+            #     config={"callback": None}
+            # )
+
+            user_proxy = TrackableUserProxyAgent(
+                name="User",
+                human_input_mode="NEVER",
+                is_termination_msg=lambda x: x.get("content", "").find("TERMINATE") >= 0,
+                code_execution_config=False,
+            )
+            # user_proxy.register_reply(
+            #     trigger=[autogen.Agent, None],
+            #     reply_func=print_messages,
+            #     config={"callback": None}
+            # )
+
+            user_proxy.initiate_chats(
+                [
+                    {
+                        "chat_id": 0,
+                        "recipient": writer,
+                        "message": create_writer_task(overview, title, check_messages[title]['subjects'], check_messages[title]['appendix']),
+                        "clear_history": True,
+                        "silent": False,
+                        "max_turns": 1,
+                        "summary_method": "last_msg"
+                    },
+                    {
+                        "chat_id": 1,
+                        "recipient": reviewer,
+                        "message": create_reviewer_task(overview, title, check_messages[title]['subjects'], check_messages[title]['appendix']),
+                        "clear_history": False,
+                        "silent": False,
+                        "max_turns": 1,
+                        "summary_method": "last_msg"
+                    },
+                    {
+                        "chat_id": 2,
+                        "recipient": writer,
+                        "message": '最終版として要件定義書を作成してください。',
+                        "clear_history": False,
+                        "silent": False,
+                        "max_turns": 1,
+                        "summary_method": "last_msg"
+                    }
+                ]
+            )
+
+    # チャットメッセージを表示
+    for msg in st.session_state.messages:
+        st.chat_message(msg["role"]).write(msg["content"])
